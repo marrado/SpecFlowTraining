@@ -66,7 +66,7 @@ namespace SpecFlowTests.Infrastructure
         /// <summary>
         /// Ensures that no baskets are saved in the db.
         /// </summary>
-        public void EnsureNoBasketsSaved()
+        public void EnsureNoBasketsExist()
         {
             _webApplicationContext.PerformServiceAction(new Action<CatalogContext>(context =>
                                                                                    {
