@@ -57,10 +57,26 @@ namespace SpecFlowTests.Drivers
             _shownItems.Select(item => item.Id).Should().BeEquivalentTo(_expectedItems.Select(item => item.Id));
         }
 
+        public void AssertExpectedItemCountIsListed(int itemsCount)
+        {
+            _shownItems.Count().Should().Be(itemsCount);
+        }
+
         public void ShowFirstPage()
         {
             var model = _serviceContext.GetFirstCatalogPage(_pageSize);
             _shownItems = model.CatalogItems;
+        }
+
+        public void ShowPage(int pageNumber)
+        {
+            var model = _serviceContext.GetCatalogPage(pageNumber - 1, _pageSize);
+            _shownItems = model.CatalogItems;
+        }
+
+        public void SetPageSize(int pageSize)
+        {
+            _pageSize = pageSize;
         }
     }
 }
