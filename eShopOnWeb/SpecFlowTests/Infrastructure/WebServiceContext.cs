@@ -8,6 +8,9 @@ using Newtonsoft.Json;
 
 namespace SpecFlowTests.Infrastructure
 {
+    /// <summary>
+    /// Wrapper class to hide the technicalities from the driver classes.
+    /// </summary>
     public class WebServiceContext
     {
         private readonly WebApplicationContext _webApplicationContext;

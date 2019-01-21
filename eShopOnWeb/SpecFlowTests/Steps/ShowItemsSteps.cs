@@ -3,6 +3,11 @@ using TechTalk.SpecFlow;
 
 namespace SpecFlowTests.Steps
 {
+    /// <summary>
+    /// Binding class for the steps connected to Shwoing available items on the main page.
+    /// It connects the test definition (feature file) with implementation (driver file)
+    /// and defines what is done (not how) to fulfill the command from feature file.
+    /// </summary>
     [Binding]
     public class ShowItemsSteps
     {
@@ -25,12 +30,6 @@ namespace SpecFlowTests.Steps
             _warenAnzeigenDriver.EnsureCatalogContainsDummyItems(itemsCount);
         }
 
-        [Given(@"es bis (.*) Waren auf einer Seite gibt")]
-        public void AngenommenEsBisWarenAufEinerSeiteGibt(int pageSize)
-        {
-            _warenAnzeigenDriver.SetPageSize(pageSize);
-        }
-
 
         [When(@"ich die erste Seite von Waren anfordere")]
         public void WennIchDieErsteWarenAnfordere()
@@ -38,22 +37,10 @@ namespace SpecFlowTests.Steps
             _warenAnzeigenDriver.ShowFirstPage();
         }
 
-        [When(@"ich Seite (.*) von Waren anfordere")]
-        public void WennIchSeiteVonWarenAnfordere(int pageNumber)
-        {
-            _warenAnzeigenDriver.ShowPage(pageNumber);
-        }
-
         [Then(@"sollten alle diese Waren angezeigt werden")]
         public void DannSolltenDieseWarenAngezeigt()
         {
             _warenAnzeigenDriver.AssertExpectedItemsAreListed();
-        }
-
-        [Then(@"sollen (.*) Waren angezeigt werden")]
-        public void DannSollenAufSeiteAngezeigtWerden(int itemsCount)
-        {
-            _warenAnzeigenDriver.AssertExpectedItemCountIsListed(itemsCount);
         }
     }
 }

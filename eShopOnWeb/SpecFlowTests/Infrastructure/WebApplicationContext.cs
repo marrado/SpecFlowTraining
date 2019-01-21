@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace SpecFlowTests.Infrastructure
 {
+    /// <summary>
+    /// Context class used to call the Test-Service
+    /// </summary>
     public class WebApplicationContext
     {
         public HttpClient Client { get; }
@@ -20,6 +23,11 @@ namespace SpecFlowTests.Infrastructure
             _factory = factory;
         }
 
+        /// <summary>
+        /// Perform action using a specified service in the WebApplicaiton
+        /// </summary>
+        /// <typeparam name="T">Service-Type</typeparam>
+        /// <param name="action">Action to be performed</param>
         public void PerformServiceAction<T>(Action<T> action)
         {
             _factory.PerformServiceAction(action);

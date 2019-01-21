@@ -7,6 +7,9 @@ using Microsoft.EntityFrameworkCore.Internal;
 
 namespace SpecFlowTests.Infrastructure
 {
+    /// <summary>
+    /// Context class holding the link to the currently used database. USed to perform operations on the database.
+    /// </summary>
     public class DatabaseContext
     {
         private readonly WebApplicationContext _webApplicationContext;
@@ -16,6 +19,9 @@ namespace SpecFlowTests.Infrastructure
             _webApplicationContext = webApplicationContext;
         }
 
+        /// <summary>
+        /// Clears the database and checks that it succeeded.
+        /// </summary>
         public void EnsureDatabaseEmpty()
         {
             _webApplicationContext.PerformServiceAction(new Action<CatalogContext>(context =>
@@ -40,6 +46,10 @@ namespace SpecFlowTests.Infrastructure
                                                                                    }));
         }
 
+        /// <summary>
+        /// Inserts given CatalogItems and checks that it succeeded.
+        /// </summary>
+        /// <param name="catalogItems">Items to be inserted</param>
         public void EnsureCatalogItemsExist(ICollection<CatalogItem> catalogItems)
         {
             if (catalogItems == null || !catalogItems.Any())
@@ -53,7 +63,10 @@ namespace SpecFlowTests.Infrastructure
             _webApplicationContext.PerformServiceAction(new Action<CatalogContext>(context => { context.CatalogItems.Should().HaveCount(catalogItems.Count); }));
         }
 
-        public void EnsureBasketEmpty()
+        /// <summary>
+        /// Ensures that no baskets are saved in the db.
+        /// </summary>
+        public void EnsureNoBasketsSaved()
         {
             _webApplicationContext.PerformServiceAction(new Action<CatalogContext>(context =>
                                                                                    {

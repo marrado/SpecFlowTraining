@@ -5,8 +5,18 @@ using Microsoft.eShopWeb.Web.ViewModels;
 
 namespace SpecFlowTests.Infrastructure
 {
+    /// <summary>
+    /// Helper class, which provides with valid dummy items.
+    /// </summary>
     public static class TestDataProvider
     {
+        /// <summary>
+        /// Returns a list of dummy CatalogItems
+        /// </summary>
+        /// <param name="itemsCount"></param>
+        /// <param name="catalogTypeId"></param>
+        /// <param name="catalogBrandId"></param>
+        /// <returns></returns>
         public static List<CatalogItem> GetDummyCatalogItems(int itemsCount, int catalogTypeId = 1, int catalogBrandId = 2)
         {
             Random r = new Random();
@@ -26,6 +36,10 @@ namespace SpecFlowTests.Infrastructure
             return items;
         }
 
+        /// <summary>
+        /// Returns a dummy CatalogItem
+        /// </summary>
+        /// <returns></returns>
         public static CatalogItem GetDummyCatalogItem()
         {
             Random r = new Random();
@@ -38,6 +52,10 @@ namespace SpecFlowTests.Infrastructure
                    };
         }
 
+        /// <summary>
+        /// Returns a dummy CatalogItemViewModel
+        /// </summary>
+        /// <returns></returns>
         public static CatalogItemViewModel GetDummyCatalogItemViewModel()
         {
             Random r = new Random();

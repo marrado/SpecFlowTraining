@@ -10,11 +10,19 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace SpecFlowTests.Infrastructure
 {
+    /// <summary>
+    /// This class sets up a fake WebApplication to be used during the tests
+    /// </summary>
     public class CustomWebApplicationFactory
         : WebApplicationFactory<Startup>
     {
         private ServiceProvider _serviceProvider;
 
+        /// <summary>
+        /// Perform action using a specified service in the WebApplicaiton
+        /// </summary>
+        /// <typeparam name="T">Service-Type</typeparam>
+        /// <param name="action">Action to be performed</param>
         public void PerformServiceAction<T>(Action<T> action)
         {
             using (var scope = _serviceProvider.CreateScope())
