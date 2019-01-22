@@ -25,5 +25,10 @@ namespace Microsoft.eShopWeb.ApplicationCore.Entities.BasketAggregate
             var existingItem = Items.FirstOrDefault(i => i.CatalogItemId == catalogItemId);
             existingItem.Quantity += quantity;
         }
+
+        public void Clear()
+        {
+            _items.Clear();
+        }
     }
 }

@@ -14,23 +14,29 @@ namespace SpecFlowTests.Drivers
             _dbContext = dbContext;
         }
 
-        public void AddDummyItemToBasket()
+        public void AddDummyItemsToBasket(int itemCount)
         {
-            _dbContext.EnsureCatalogItemsExist(new[] { TestDataProvider.GetDummyCatalogItem() });
-            var catalogItemViewModel = TestDataProvider.GetDummyCatalogItemViewModel();
+            _dbContext.EnsureCatalogItemsExist(TestDataProvider.GetDummyCatalogItems(itemCount));
 
-            _webContext.AddToBasket(catalogItemViewModel);
+            TestDataProvider.GetDummyCatalogItemViewModels(itemCount).ForEach(item => _webContext.AddToBasket(item));
         }
 
         public void EnsureBasketEmpty()
         {
-            _dbContext.EnsureNoBasketsExist();
+            var basket = _webContext.GetBasket();
+            _dbContext.EnsureBasketEmpty(basket.Id);
         }
 
         public void AssertBasketContains(int itemCount)
         {
             var basket = _webContext.GetBasket();
-            basket.Items.Should().HaveCount(itemCount);
+            basket.ItemsCount.Should().Be(itemCount);
+        }
+
+        public void EnsureBasketContainsItems(int itemCount)
+        {
+            var basket = _webContext.GetBasket();
+            _dbContext.EnsureBasketContainsOnlyItems(basket.Id, TestDataProvider.GetDummyCatalogItems(itemCount));
         }
     }
 }

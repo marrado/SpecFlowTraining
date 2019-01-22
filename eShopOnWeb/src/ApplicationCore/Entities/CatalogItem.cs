@@ -10,5 +10,10 @@
         public CatalogType CatalogType { get; set; }
         public int CatalogBrandId { get; set; }
         public CatalogBrand CatalogBrand { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
     }
 }

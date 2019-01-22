@@ -10,6 +10,8 @@ namespace Microsoft.eShopWeb.Web.ViewModels
         public List<BasketItemViewModel> Items { get; set; } = new List<BasketItemViewModel>();
         public string BuyerId { get; set; }
 
+        public int ItemsCount => Items.Sum(i => i.Quantity);
+
         public decimal Total()
         {
             return Math.Round(Items.Sum(x => x.UnitPrice * x.Quantity), 2);

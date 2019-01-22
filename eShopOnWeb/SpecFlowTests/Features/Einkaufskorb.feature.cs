@@ -98,9 +98,9 @@ this.FeatureBackground();
 #line 10
  testRunner.Given("mein Einkaufswagen ist leer", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Angenommen ");
 #line 12
- testRunner.When("ich einen Produkt in Einkaufswagen hinzufüge", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Wenn ");
+ testRunner.When("ich 1 Produkte in Einkaufswagen hinzufüge", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Wenn ");
 #line 14
- testRunner.Then("sollte mein Einkaufswagen 1 Produkt beinhalten", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Dann ");
+ testRunner.Then("sollte mein Einkaufswagen 1 Produkte beinhalten", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Dann ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -119,7 +119,7 @@ this.FeatureBackground();
 #line 20
  testRunner.Given("mein Einkaufswagen hat schon 2 Produkte", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Angenommen ");
 #line 22
- testRunner.When("ich einen Produkt in Einkaufswagen hinzufüge", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Wenn ");
+ testRunner.When("ich 1 Produkte in Einkaufswagen hinzufüge", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Wenn ");
 #line 24
  testRunner.Then("sollte mein Einkaufswagen 3 Produkte beinhalten", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Dann ");
 #line hidden

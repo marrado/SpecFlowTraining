@@ -19,13 +19,19 @@ namespace SpecFlowTests.Steps
             _einkaufswagenDriver.EnsureBasketEmpty();
         }
 
-        [When(@"ich einen Produkt in Einkaufswagen hinzufüge")]
-        public void WennIchEinenProduktInEinkaufswagenHinzufuge()
+        [Given(@"mein Einkaufswagen hat schon (.*) Produkte")]
+        public void AngenommenMeinEinkaufswagenHatSchonProdukte(int itemCount)
         {
-            _einkaufswagenDriver.AddDummyItemToBasket();
+            _einkaufswagenDriver.EnsureBasketContainsItems(itemCount);
         }
 
-        [Then(@"sollte mein Einkaufswagen (.*) Produkt beinhalten")]
+        [When(@"ich (.*) Produkte in Einkaufswagen hinzufüge")]
+        public void WennIchProdukteInEinkaufswagenHinzufuge(int itemCount)
+        {
+            _einkaufswagenDriver.AddDummyItemsToBasket(itemCount);
+        }
+
+        [Then(@"sollte mein Einkaufswagen (.*) Produkte beinhalten")]
         public void DannSollteMeinEinkaufswagenProduktBeinhalten(int itemCount)
         {
             _einkaufswagenDriver.AssertBasketContains(itemCount);
