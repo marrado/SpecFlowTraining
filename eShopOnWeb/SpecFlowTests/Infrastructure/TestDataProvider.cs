@@ -19,18 +19,10 @@ namespace SpecFlowTests.Infrastructure
         /// <returns></returns>
         public static List<CatalogItem> GetDummyCatalogItems(int itemsCount, int catalogTypeId = 1, int catalogBrandId = 2)
         {
-            Random r = new Random();
             var items = new List<CatalogItem>();
             for (int i = 0; i < itemsCount; i++)
             {
-                items.Add(new CatalogItem
-                          {
-                              CatalogTypeId = catalogTypeId,
-                              CatalogBrandId = catalogBrandId,
-                              Description = $"TestItem{i}",
-                              Price = r.Next() % 50,
-                              PictureUri = "http://catalogbaseurltobereplaced/images/products/1.png"
-                });
+                items.Add(GetDummyCatalogItem(i + 1, catalogTypeId, catalogBrandId));
             }
 
             return items;
@@ -40,30 +32,47 @@ namespace SpecFlowTests.Infrastructure
         /// Returns a dummy CatalogItem
         /// </summary>
         /// <returns></returns>
-        public static CatalogItem GetDummyCatalogItem()
+        public static CatalogItem GetDummyCatalogItem(int itemId = 1, int catalogTypeId = 1, int catalogBrandId = 2)
         {
             Random r = new Random();
             return new CatalogItem
                    {
                        Price = r.Next() % 50,
                        PictureUri = "http://catalogbaseurltobereplaced/images/products/1.png",
-                       Id = 1,
+                       Id = itemId,
                        Name = "TestItem"
                    };
+        }
+        /// <summary>
+        /// Returns a list of dummy CatalogItemViewModels
+        /// </summary>
+        /// <param name="itemsCount"></param>
+        /// <param name="catalogTypeId"></param>
+        /// <param name="catalogBrandId"></param>
+        /// <returns></returns>
+        public static List<CatalogItemViewModel> GetDummyCatalogItemViewModels(int itemsCount)
+        {
+            var items = new List<CatalogItemViewModel>();
+            for (int i = 0; i < itemsCount; i++)
+            {
+                items.Add(GetDummyCatalogItemViewModel(i + 1));
+            }
+
+            return items;
         }
 
         /// <summary>
         /// Returns a dummy CatalogItemViewModel
         /// </summary>
         /// <returns></returns>
-        public static CatalogItemViewModel GetDummyCatalogItemViewModel()
+        public static CatalogItemViewModel GetDummyCatalogItemViewModel(int itemId = 1)
         {
             Random r = new Random();
             return new CatalogItemViewModel
                    {
                        Price = r.Next() % 50,
                        PictureUri = "http://catalogbaseurltobereplaced/images/products/1.png",
-                       Id = 1,
+                       Id = itemId,
                        Name = "TestItem"
                    };
         }

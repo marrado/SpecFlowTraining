@@ -10,6 +10,8 @@ namespace Microsoft.eShopWeb.ApplicationCore.Entities.BasketAggregate
         private readonly List<BasketItem> _items = new List<BasketItem>();
         public IReadOnlyCollection<BasketItem> Items => _items.AsReadOnly();
 
+        public int ItemCount => Items.Sum(i => i.Quantity);
+
         public void AddItem(int catalogItemId, decimal unitPrice, int quantity = 1)
         {
             if (Items.All(i => i.CatalogItemId != catalogItemId))
@@ -25,5 +27,7 @@ namespace Microsoft.eShopWeb.ApplicationCore.Entities.BasketAggregate
             var existingItem = Items.FirstOrDefault(i => i.CatalogItemId == catalogItemId);
             existingItem.Quantity += quantity;
         }
+
+        public void Clear() => _items.Clear();
     }
 }
