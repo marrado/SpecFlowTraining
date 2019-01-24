@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using Microsoft.eShopWeb.ApplicationCore.Entities;
 using Microsoft.eShopWeb.Infrastructure.Data;
@@ -50,30 +51,62 @@ namespace SpecFlowTests.Infrastructure
         /// Inserts given CatalogItems and checks that it succeeded.
         /// </summary>
         /// <param name="catalogItems">Items to be inserted</param>
-        public void EnsureCatalogItemsExist(ICollection<CatalogItem> catalogItems)
+        public void EnsureCatalogItemsExist(List<CatalogItem> catalogItems)
         {
-            if (catalogItems == null || !catalogItems.Any())
+            if (catalogItems == null || !EnumerableExtensions.Any(catalogItems))
                 throw new ArgumentException("Collection of items to be added is empty");
 
             _webApplicationContext.PerformServiceAction(new Action<CatalogContext>(context =>
                                                                                    {
+                                                                                       catalogItems.ForEach(item =>
+                                                                                                            {
+                                                                                                                var existingItem = context.CatalogItems.SingleOrDefault(i => i.Id == item.Id);
+                                                                                                                if (existingItem != null)
+                                                                                                                    context.CatalogItems.Remove(existingItem);
+                                                                                                            });
+                                                                                       context.SaveChanges();
                                                                                        context.AddRange(catalogItems);
                                                                                        context.SaveChanges();
                                                                                    }));
-            _webApplicationContext.PerformServiceAction(new Action<CatalogContext>(context => { context.CatalogItems.Should().HaveCount(catalogItems.Count); }));
+            _webApplicationContext.PerformServiceAction(new Action<CatalogContext>(context =>
+                                                                                   {
+                                                                                       context.CatalogItems.Where(item => catalogItems.Contains(item)).Should().HaveCount(catalogItems.Count);
+                                                                                   }));
         }
 
         /// <summary>
-        /// Ensures that no baskets are saved in the db.
+        /// Ensures that the given basket has no items in the db.
         /// </summary>
-        public void EnsureNoBasketsSaved()
+        /// <param name="id"></param>
+        public void EnsureBasketEmpty(int id)
         {
             _webApplicationContext.PerformServiceAction(new Action<CatalogContext>(context =>
                                                                                    {
-                                                                                       context.Baskets.RemoveRange(context.Baskets);
+                                                                                       var basket = context.Baskets.Single(b => b.Id == id);
+                                                                                       basket.Clear();
                                                                                        context.SaveChanges();
 
-                                                                                       context.Baskets.Should().BeEmpty();
+                                                                                       context.Baskets.Single(b => b.Id == id).Items.Should().BeEmpty();
+                                                                                   }));
+        }
+
+        /// <summary>
+        /// Ensures that basket contains exactly given items.
+        /// </summary>
+        /// <param name="basketId"></param>
+        /// <param name="catalogItems"></param>
+        public void EnsureBasketContainsOnlyItems(int basketId, List<CatalogItem> catalogItems)
+        {
+            EnsureBasketEmpty(basketId);
+            EnsureCatalogItemsExist(catalogItems);
+
+            _webApplicationContext.PerformServiceAction(new Action<CatalogContext>(context =>
+                                                                                   {
+                                                                                       var basket = context.Baskets.Single(b => b.Id == basketId);
+                                                                                       catalogItems.ForEach(item => basket.AddItem(item.Id, item.Price));
+                                                                                       context.SaveChanges();
+
+                                                                                       context.Baskets.Single(b => b.Id == basketId).Items.Should().HaveCount(catalogItems.Count);
                                                                                    }));
         }
     }
