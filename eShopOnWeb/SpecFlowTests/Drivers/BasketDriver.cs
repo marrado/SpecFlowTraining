@@ -1,4 +1,6 @@
-﻿using FluentAssertions;
+﻿using System.Collections.Generic;
+using FluentAssertions;
+using Microsoft.eShopWeb.ApplicationCore.Entities;
 using SpecFlowTests.Infrastructure;
 
 namespace SpecFlowTests.Drivers
@@ -16,7 +18,7 @@ namespace SpecFlowTests.Drivers
 
         public void AddDummyItemToBasket()
         {
-            _dbContext.EnsureCatalogItemsExist(new[] { TestDataProvider.GetDummyCatalogItem() });
+            _dbContext.EnsureCatalogItemsExist(new List<CatalogItem> { TestDataProvider.GetDummyCatalogItem() });
             var catalogItemViewModel = TestDataProvider.GetDummyCatalogItemViewModel();
 
             _webContext.AddToBasket(catalogItemViewModel);
@@ -24,7 +26,8 @@ namespace SpecFlowTests.Drivers
 
         public void EnsureBasketEmpty()
         {
-            _dbContext.EnsureNoBasketsExist();
+            var basket = _webContext.GetBasket();
+            _dbContext.EnsureBasketEmpty(basket.Id);
         }
 
         public void AssertBasketContains(int itemCount)
