@@ -9,9 +9,9 @@ Szenario: Ein Produkt in leeren Einkaufswagen hinzufügen
 
 	Angenommen mein Einkaufswagen ist leer
 	
-	Wenn ich einen Produkt in Einkaufswagen hinzufüge
+	Wenn ich 1 Produkte in Einkaufswagen hinzufüge
 
-	Dann sollte mein Einkaufswagen 1 Produkt beinhalten
+	Dann sollte mein Einkaufswagen 1 Produkte beinhalten
 
 #-------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -19,7 +19,7 @@ Szenario: Ein Produkt in nicht leeren Einkaufswagen hinzufügen
 
 	Angenommen mein Einkaufswagen hat schon 2 Produkte
 	
-	Wenn ich einen Produkt in Einkaufswagen hinzufüge
+	Wenn ich 1 Produkte in Einkaufswagen hinzufüge
 
 	Dann sollte mein Einkaufswagen 3 Produkte beinhalten
 
@@ -34,7 +34,7 @@ Szenariogrundriss: Mehrere Produkte in leeren Einkaufswagen hinzufügen
 	Dann sollte mein Einkaufswagen <Anzahl> Produkte beinhalten
 
 	Beispiele:
-	| Anzahl |
-	| 2      |
-	| 4      |
-	| 5      |
+		| Anzahl |
+		| 2      |
+		| 4      |
+		| 5      |
