@@ -71,19 +71,6 @@ namespace Microsoft.eShopWeb.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> AddToBasket(int? productId, decimal price)
-        {
-            if (productId == null)
-            {
-                return RedirectToAction("Index", "Catalog");
-            }
-            var basketViewModel = await GetBasketViewModelAsync();
-
-            await _basketService.AddItemToBasket(basketViewModel.Id, productId.Value, price, 1);
-
-            return RedirectToAction("Index");
-        }
-
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> Checkout(Dictionary<string, int> items)

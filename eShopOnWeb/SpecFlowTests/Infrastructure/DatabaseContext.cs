@@ -110,5 +110,33 @@ namespace SpecFlowTests.Infrastructure
                                                                                        context.Baskets.Single(b => b.Id == basketId).Items.Should().HaveCount(catalogItems.Count);
                                                                                    }));
         }
+
+        public void EnsureBasketExists(string username)
+        {
+            _webApplicationContext.PerformServiceAction(new Action<CatalogContext>(context =>
+            {
+                var id = context.Baskets.Max(b => b.Id);
+                id++;
+                context.Baskets.Add(new Basket
+                {
+                    BuyerId = username,
+                    Id = id
+                });
+                context.SaveChanges();
+
+                context.Baskets.Count(b => b.BuyerId == username).Should().Be(1);
+            }));
+        }
+
+        public int GetBasketId(string username)
+        {
+            int? id = -1;
+            _webApplicationContext.PerformServiceAction(new Action<CatalogContext>(context =>
+            {
+                id = context.Baskets.SingleOrDefault(b => b.BuyerId == username)?.Id;
+            }));
+
+            return id ?? -1;
+        }
     }
 }
