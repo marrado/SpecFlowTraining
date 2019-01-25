@@ -28,9 +28,6 @@ namespace Microsoft.eShopWeb.ApplicationCore.Entities.BasketAggregate
             existingItem.Quantity += quantity;
         }
 
-        public void Clear()
-        {
-            _items.Clear();
-        }
+        public void Clear() => _items.Clear();
     }
 }
