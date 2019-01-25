@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Formatting;
 using System.Threading.Tasks;
 using Microsoft.eShopWeb.Web;
 using Microsoft.eShopWeb.Web.ViewModels;
@@ -34,6 +33,23 @@ namespace SpecFlowTests.Infrastructure
             return Get<CatalogIndexViewModel>($"/api/catalog/list?page={pageNumber}&pageSize={pageSize}");
         }
 
+        public void AddToBasket(CatalogItemViewModel item)
+        {
+            var dict = new Dictionary<string, string>
+            {
+                {"Name", item.Name},
+                {"Price", item.Price.ToString(CultureInfo.InvariantCulture)},
+                {"Id", item.Id.ToString()},
+                {"PictureUri", item.PictureUri}
+            };
+            Post($"/Basket/AddToBasket", new FormUrlEncodedContent(dict));
+        }
+
+        public BasketViewModel GetBasket()
+        {
+            return Get<BasketViewModel>("api/basket/GetCurrentUserBasket");
+        }
+
         private TModel Get<TModel>(string path)
         {
             var response = Task.Run(() => _webApplicationContext.Client.GetAsync(path)).Result;
@@ -55,23 +71,6 @@ namespace SpecFlowTests.Infrastructure
                 return;
             }
             response.EnsureSuccessStatusCode();
-        }
-        
-        public void AddToBasket(CatalogItemViewModel item)
-        {
-            var dict = new Dictionary<string, string>
-            {
-                {"Name", item.Name},
-                {"Price", item.Price.ToString(CultureInfo.InvariantCulture)},
-                {"Id", item.Id.ToString()},
-                {"PictureUri", item.PictureUri}
-            };
-            Post($"/Basket/AddToBasket", new FormUrlEncodedContent(dict));
-        }
-
-        public BasketViewModel GetBasket()
-        {
-            return Get<BasketViewModel>("api/basket/GetCurrentUserBasket");
         }
     }
 }

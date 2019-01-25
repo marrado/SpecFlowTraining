@@ -113,9 +113,12 @@ namespace SpecFlowTests.Infrastructure
 
         public void EnsureBasketExists(string username)
         {
+            if(GetBasketForUser(username) != null)
+                return;
+
             _webApplicationContext.PerformServiceAction(new Action<CatalogContext>(context =>
             {
-                var id = context.Baskets.Max(b => b.Id);
+                var id = context.Baskets.Any() ? context.Baskets.Max(b => b.Id) : 0;
                 id++;
                 context.Baskets.Add(new Basket
                 {
@@ -128,15 +131,20 @@ namespace SpecFlowTests.Infrastructure
             }));
         }
 
-        public int GetBasketId(string username)
+        public Basket GetBasketForUser(string username)
         {
-            int? id = -1;
+            Basket basket = null;
             _webApplicationContext.PerformServiceAction(new Action<CatalogContext>(context =>
             {
-                id = context.Baskets.SingleOrDefault(b => b.BuyerId == username)?.Id;
+                basket = context.Baskets.SingleOrDefault(b => b.BuyerId == username);
             }));
 
-            return id ?? -1;
+            return basket;
+        }
+
+        public int GetBasketId(string username)
+        {
+            return GetBasketForUser(username)?.Id ?? -1;
         }
     }
 }

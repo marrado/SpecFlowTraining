@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Linq;
+using FluentAssertions;
 using SpecFlowTests.Infrastructure;
 
 namespace SpecFlowTests.Drivers
@@ -14,29 +15,30 @@ namespace SpecFlowTests.Drivers
             _dbContext = dbContext;
         }
 
-        public void AddDummyItemsToBasket(int itemCount)
-        {
-            _dbContext.EnsureCatalogItemsExist(TestDataProvider.GetDummyCatalogItems(itemCount));
-
-            TestDataProvider.GetDummyCatalogItemViewModels(itemCount).ForEach(item => _webContext.AddToBasket(item));
-        }
-
         public void EnsureBasketEmpty()
         {
-            var basket = _webContext.GetBasket();
-            _dbContext.EnsureBasketEmpty(basket.Id);
-        }
-
-        public void AssertBasketContains(int itemCount)
-        {
-            var basket = _webContext.GetBasket();
-            basket.ItemsCount.Should().Be(itemCount);
+            _dbContext.EnsureBasketExists(TestConstants.TestUserId);
+            var basketId = _dbContext.GetBasketId(TestConstants.TestUserId);
+            _dbContext.EnsureBasketEmpty(basketId);
         }
 
         public void EnsureBasketContainsItems(int itemCount)
         {
-            var basket = _webContext.GetBasket();
-            _dbContext.EnsureBasketContainsOnlyItems(basket.Id, TestDataProvider.GetDummyCatalogItems(itemCount));
+            var basketId = _dbContext.GetBasketId(TestConstants.TestUserId);
+            _dbContext.EnsureBasketContainsOnlyItems(basketId, TestDataProvider.GetDummyCatalogItems(itemCount));
+        }
+
+        public void AddDummyItemsToBasket(int itemCount)
+        {
+            _dbContext.EnsureCatalogItemsExist(TestDataProvider.GetDummyCatalogItems(itemCount));
+            TestDataProvider.GetDummyCatalogItemViewModels(itemCount).ForEach(item => _webContext.AddToBasket(item));
+        }
+
+        public void AssertBasketContains(int itemCount)
+        {
+            var basket = _dbContext.GetBasketForUser(TestConstants.TestUserId);
+            var basket2 = _webContext.GetBasket();
+            basket.Items.Sum(i => i.Quantity).Should().Be(itemCount);
         }
     }
 }
