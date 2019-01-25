@@ -24,6 +24,7 @@ namespace SpecFlowTests.Drivers
 
         public void EnsureBasketContainsItems(int itemCount)
         {
+            _dbContext.EnsureBasketExists(TestConstants.TestUserId);
             var basketId = _dbContext.GetBasketId(TestConstants.TestUserId);
             _dbContext.EnsureBasketContainsOnlyItems(basketId, TestDataProvider.GetDummyCatalogItems(itemCount));
         }
@@ -37,7 +38,6 @@ namespace SpecFlowTests.Drivers
         public void AssertBasketContains(int itemCount)
         {
             var basket = _dbContext.GetBasketForUser(TestConstants.TestUserId);
-            var basket2 = _webContext.GetBasket();
             basket.Items.Sum(i => i.Quantity).Should().Be(itemCount);
         }
     }

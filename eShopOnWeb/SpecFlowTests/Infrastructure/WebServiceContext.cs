@@ -45,11 +45,6 @@ namespace SpecFlowTests.Infrastructure
             Post($"/Basket/AddToBasket", new FormUrlEncodedContent(dict));
         }
 
-        public BasketViewModel GetBasket()
-        {
-            return Get<BasketViewModel>("api/basket/GetCurrentUserBasket");
-        }
-
         private TModel Get<TModel>(string path)
         {
             var response = Task.Run(() => _webApplicationContext.Client.GetAsync(path)).Result;

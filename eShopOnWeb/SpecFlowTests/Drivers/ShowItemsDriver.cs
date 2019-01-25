@@ -33,7 +33,7 @@ namespace SpecFlowTests.Drivers
 
         public void EnsureItemsCatalogEmpty()
         {
-            _dbContext.EnsureDatabaseEmpty();
+            _dbContext.EnsureDatabaseIsEmpty();
             _expectedItems = new List<CatalogItem>();
         }
 
