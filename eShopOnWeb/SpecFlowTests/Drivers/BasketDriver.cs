@@ -26,13 +26,14 @@ namespace SpecFlowTests.Drivers
 
         public void EnsureBasketEmpty()
         {
-            var basket = _webContext.GetBasket();
-            _dbContext.EnsureBasketEmpty(basket.Id);
+            _dbContext.EnsureBasketExists(TestConstants.TestUserId);
+            var basketId = _dbContext.GetBasketId(TestConstants.TestUserId);
+            _dbContext.EnsureBasketEmpty(basketId);
         }
 
         public void AssertBasketContains(int itemCount)
         {
-            var basket = _webContext.GetBasket();
+            var basket = _dbContext.GetBasketForUser(TestConstants.TestUserId);
             basket.Items.Should().HaveCount(itemCount);
         }
     }
