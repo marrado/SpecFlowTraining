@@ -67,21 +67,11 @@ namespace SpecFlowTests.Infrastructure
                                                                                           options.UseInternalServiceProvider(serviceProvider);
                                                                                       });
                                           
-                                          // Add memory cache services
-                                          services.AddMemoryCache();
-
                                           // Build the service provider.
                                           _serviceProvider = services.BuildServiceProvider();
 
-                                          // Create a scope to obtain a reference to the database
-                                          // context (ApplicationDbContext).
-                                          using (var scope = _serviceProvider.CreateScope())
-                                          {
-                                              var scopedServices = scope.ServiceProvider;
-                                              var db = scopedServices.GetRequiredService<CatalogContext>();
-                                              // Ensure the database is created.
-                                              db.Database.EnsureCreated();
-                                          }
+                                          // Ensure the database is created.
+                                          PerformServiceAction<CatalogContext>(db => db.Database.EnsureCreated());
                                       });
         }
     }

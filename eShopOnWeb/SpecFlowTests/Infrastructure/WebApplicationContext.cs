@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
-using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.eShopWeb.Web;
 
 namespace SpecFlowTests.Infrastructure
 {
@@ -15,11 +16,8 @@ namespace SpecFlowTests.Infrastructure
 
         public WebApplicationContext(CustomWebApplicationFactory factory)
         {
-            Client = factory.CreateClient(new WebApplicationFactoryClientOptions
-                                          {
-                                              AllowAutoRedirect = false,
-                                              HandleCookies = true
-                                          });
+            var fakeCookieContainer = CreateFakeCookieContainer();
+            Client = factory.CreateDefaultClient(new Uri("http://localhost"), fakeCookieContainer);
             _factory = factory;
         }
 
@@ -31,6 +29,17 @@ namespace SpecFlowTests.Infrastructure
         public void PerformServiceAction<T>(Action<T> action)
         {
             _factory.PerformServiceAction(action);
+        }
+
+        private static SimpleCookieContainer CreateFakeCookieContainer()
+        {
+            var container = new CookieContainer();
+            container.Add(new Cookie(Constants.BASKET_COOKIENAME, TestConstants.TestUserId)
+            {
+                Domain = "localhost"
+            });
+            var fakeCookieContainer = new SimpleCookieContainer(container);
+            return fakeCookieContainer;
         }
     }
 }

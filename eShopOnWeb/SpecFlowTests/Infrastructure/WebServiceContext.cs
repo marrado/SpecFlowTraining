@@ -1,6 +1,7 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Globalization;
+using System.Net;
 using System.Net.Http;
-using System.Net.Http.Formatting;
 using System.Threading.Tasks;
 using Microsoft.eShopWeb.Web;
 using Microsoft.eShopWeb.Web.ViewModels;
@@ -32,6 +33,18 @@ namespace SpecFlowTests.Infrastructure
             return Get<CatalogIndexViewModel>($"/api/catalog/list?page={pageNumber}&pageSize={pageSize}");
         }
 
+        public void AddToBasket(CatalogItemViewModel item)
+        {
+            var dict = new Dictionary<string, string>
+            {
+                {"Name", item.Name},
+                {"Price", item.Price.ToString(CultureInfo.InvariantCulture)},
+                {"Id", item.Id.ToString()},
+                {"PictureUri", item.PictureUri}
+            };
+            Post($"/Basket/AddToBasket", new FormUrlEncodedContent(dict));
+        }
+
         private TModel Get<TModel>(string path)
         {
             var response = Task.Run(() => _webApplicationContext.Client.GetAsync(path)).Result;
@@ -45,21 +58,14 @@ namespace SpecFlowTests.Infrastructure
             return JsonConvert.DeserializeObject<TModel>(stringResponse);
         }
 
-        private void Post<TModel>(string path, TModel data)
+        private void Post(string path, HttpContent data)
         {
-            var response = Task.Run(() => _webApplicationContext.Client.PostAsync(path, data, new JsonMediaTypeFormatter())).Result;
+            var response = Task.Run(() => _webApplicationContext.Client.PostAsync(path, data)).Result;
+            if (response.StatusCode == HttpStatusCode.Found)
+            {
+                return;
+            }
             response.EnsureSuccessStatusCode();
-        }
-
-        //Hack mit Get, because of problems with post
-        public void AddToBasket(CatalogItemViewModel item)
-        {
-            Get<object>($"/Basket/AddToBasket?productId={item.Id}&price={item.Price}");
-        }
-
-        public BasketViewModel GetBasket()
-        {
-            return Get<BasketViewModel>("api/basket/GetCurrentUserBasket");
         }
     }
 }
