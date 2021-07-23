@@ -10,12 +10,14 @@ namespace SpecFlowTests.Basket
     public class BasketSteps
     {
         private readonly BasketDriver _driver;
+        private readonly CurrentUserDriver _currentUserDriver;
         private readonly CurrentUserContext _currentUserContext;
 
-        public BasketSteps(BasketDriver driver, CurrentUserContext currentUserContext)
+        public BasketSteps(BasketDriver driver, CurrentUserContext currentUserContext, CurrentUserDriver currentUserDriver)
         {
             _driver = driver;
             _currentUserContext = currentUserContext;
+            _currentUserDriver = currentUserDriver;
         }
 
 #region simple ones
@@ -23,6 +25,8 @@ namespace SpecFlowTests.Basket
         [Given(@"my basket contains '(.*)'")]
         public async Task GivenMyBasketContains(string itemName)
         {
+            if(string.IsNullOrEmpty(_currentUserContext.CurrentUserName))
+                _currentUserDriver.GivenIAmLoggedInAs("John Smith");
             await _driver.GivenBasketOfUserContains(_currentUserContext.CurrentUserName, itemName);
         }
 
@@ -69,6 +73,8 @@ namespace SpecFlowTests.Basket
         [Given(@"my basket contains following products:")]
         public async Task GivenMyBasketContainsFollowingProducts(IEnumerable<AddItemToBasketRow> items)
         {
+            if (string.IsNullOrEmpty(_currentUserContext.CurrentUserName))
+                _currentUserDriver.GivenIAmLoggedInAs("John Smith");
             await _driver.GivenBasketOfUserContainsFollowingProducts(_currentUserContext.CurrentUserName, items);
         }
 

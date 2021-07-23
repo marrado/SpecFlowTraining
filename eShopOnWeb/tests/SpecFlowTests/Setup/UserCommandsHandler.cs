@@ -47,6 +47,11 @@ namespace SpecFlowTests.Setup
             return basket.Items;
         }
 
-        
+
+        public async Task CleanDb()
+        {
+            var basketService = _testFixture.ServiceProvider.GetService(typeof(IBasketService)) as IBasketService;
+            await basketService.DeleteAllBasketsAsync();
+        }
     }
 }

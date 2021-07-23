@@ -10,7 +10,7 @@
 // ------------------------------------------------------------------------------
 #region Designer generated code
 #pragma warning disable
-namespace SpecFlowTests.CatalogItem
+namespace SpecFlowTests.CatalogItem.Features
 {
     using TechTalk.SpecFlow;
     using System;
@@ -19,7 +19,7 @@ namespace SpecFlowTests.CatalogItem
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.9.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [TechTalk.SpecRun.FeatureAttribute("CatalogItems", Description="\tSimple calculator for adding two numbers", SourceFile="CatalogItem\\CatalogItems.feature", SourceLine=0)]
+    [TechTalk.SpecRun.FeatureAttribute("CatalogItems", Description="\tSimple calculator for adding two numbers", SourceFile="CatalogItem\\Features\\CatalogItems.feature", SourceLine=0)]
     public partial class CatalogItemsFeature
     {
         
@@ -34,7 +34,7 @@ namespace SpecFlowTests.CatalogItem
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "CatalogItem", "CatalogItems", "\tSimple calculator for adding two numbers", ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "CatalogItem/Features", "CatalogItems", "\tSimple calculator for adding two numbers", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         

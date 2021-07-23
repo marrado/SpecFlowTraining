@@ -36,6 +36,15 @@ namespace Microsoft.eShopWeb.ApplicationCore.Services
             await _basketRepository.DeleteAsync(basket);
         }
 
+        public async Task DeleteAllBasketsAsync()
+        {
+            var allBaskets = await _basketRepository.ListAllAsync();
+            foreach (var basket in allBaskets)
+            {
+                await _basketRepository.DeleteAsync(basket);
+            }
+        }
+
         public async Task SetQuantities(int basketId, Dictionary<string, int> quantities)
         {
             Guard.Against.Null(quantities, nameof(quantities));
