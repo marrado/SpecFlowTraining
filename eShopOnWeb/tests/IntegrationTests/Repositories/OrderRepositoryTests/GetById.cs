@@ -1,7 +1,8 @@
-﻿using Microsoft.eShopWeb.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.eShopWeb.Infrastructure.Data;
 using Microsoft.eShopWeb.UnitTests.Builders;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -24,7 +25,7 @@ namespace Microsoft.eShopWeb.IntegrationTests.Repositories.OrderRepositoryTests
         }
 
         [Fact]
-        public void GetsExistingOrder()
+        public async Task GetsExistingOrder()
         {
             var existingOrder = OrderBuilder.WithDefaultValues();
             _catalogContext.Orders.Add(existingOrder);
@@ -32,7 +33,7 @@ namespace Microsoft.eShopWeb.IntegrationTests.Repositories.OrderRepositoryTests
             int orderId = existingOrder.Id;
             _output.WriteLine($"OrderId: {orderId}");
 
-            var orderFromRepo = _orderRepository.GetById(orderId);
+            var orderFromRepo = await _orderRepository.GetByIdAsync(orderId);
             Assert.Equal(OrderBuilder.TestBuyerId, orderFromRepo.BuyerId);
 
             // Note: Using InMemoryDatabase OrderItems is available. Will be null if using SQL DB.

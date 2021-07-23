@@ -1,10 +1,10 @@
-﻿using Microsoft.eShopWeb.Web.Services;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Microsoft.eShopWeb.Web.Controllers.Api
 {
+    // No longer used - shown for reference only if using full controllers instead of Endpoints for APIs
     [Route("api/[controller]/[action]")]
-    public class BaseApiController : Controller
+    [ApiController]
+    public class BaseApiController : ControllerBase
     { }
 }

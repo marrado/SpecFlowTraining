@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.eShopWeb.Web;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -7,9 +6,10 @@ using Xunit;
 
 namespace Microsoft.eShopWeb.FunctionalTests.Web.Controllers
 {
-    public class OrderIndexOnGet : IClassFixture<CustomWebApplicationFactory<Startup>>
+    [Collection("Sequential")]
+    public class OrderIndexOnGet : IClassFixture<WebTestFixture>
     {
-        public OrderIndexOnGet(CustomWebApplicationFactory<Startup> factory)
+        public OrderIndexOnGet(WebTestFixture factory)
         {
             Client = factory.CreateClient(new WebApplicationFactoryClientOptions
             {
@@ -22,11 +22,11 @@ namespace Microsoft.eShopWeb.FunctionalTests.Web.Controllers
         [Fact]
         public async Task ReturnsRedirectGivenAnonymousUser()
         {
-            var response = await Client.GetAsync("/Order/Index");
+            var response = await Client.GetAsync("/order/my-orders");
             var redirectLocation = response.Headers.Location.OriginalString;
 
             Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
-            Assert.Contains("Account/Signin", redirectLocation);
+            Assert.Contains("/Account/Login", redirectLocation);
         }
     }
 }

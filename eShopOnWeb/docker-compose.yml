@@ -1,27 +1,14 @@
-version: '3'
+version: '3.4'
 
 services:
-  eshopwebrazor:
-    image: eshopwebrazor
-    build:
-      context: .
-      dockerfile: src/WebRazorPages/Dockerfile
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-    ports:
-      - "5107:5107"
-
   eshopwebmvc:
-    image: eshopwebmvc
+    image: ${DOCKER_REGISTRY-}eshopwebmvc
     build:
       context: .
       dockerfile: src/Web/Dockerfile
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-    ports:
-      - "5106:5106"
+  eshoppublicapi:
+    image: ${DOCKER_REGISTRY-}eshoppublicapi
+    build:
+      context: .
+      dockerfile: src/PublicApi/Dockerfile
 
-networks:
-  default:
-    external:
-      name: nat

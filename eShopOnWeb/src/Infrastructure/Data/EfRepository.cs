@@ -1,8 +1,11 @@
-﻿using Microsoft.eShopWeb.ApplicationCore.Interfaces;
+﻿using Ardalis.Specification;
+using Ardalis.Specification.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.eShopWeb.ApplicationCore.Entities;
+using Microsoft.eShopWeb.ApplicationCore.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Microsoft.eShopWeb.Infrastructure.Data
@@ -12,7 +15,7 @@ namespace Microsoft.eShopWeb.Infrastructure.Data
     /// https://blogs.msdn.microsoft.com/pfxteam/2012/04/13/should-i-expose-synchronous-wrappers-for-asynchronous-methods/
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class EfRepository<T> : IRepository<T>, IAsyncRepository<T> where T : BaseEntity
+    public class EfRepository<T> : IAsyncRepository<T> where T : BaseEntity, IAggregateRoot
     {
         protected readonly CatalogContext _dbContext;
 
@@ -21,103 +24,65 @@ namespace Microsoft.eShopWeb.Infrastructure.Data
             _dbContext = dbContext;
         }
 
-        public virtual T GetById(int id)
+        public virtual async Task<T> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
-            return _dbContext.Set<T>().Find(id);
+            var keyValues = new object[] { id };
+            return await _dbContext.Set<T>().FindAsync(keyValues, cancellationToken);
         }
 
-        public T GetSingleBySpec(ISpecification<T> spec)
+        public async Task<IReadOnlyList<T>> ListAllAsync(CancellationToken cancellationToken = default)
         {
-            return List(spec).FirstOrDefault();
+            return await _dbContext.Set<T>().ToListAsync(cancellationToken);
         }
 
-
-        public virtual async Task<T> GetByIdAsync(int id)
+        public async Task<IReadOnlyList<T>> ListAsync(ISpecification<T> spec, CancellationToken cancellationToken = default)
         {
-            return await _dbContext.Set<T>().FindAsync(id);
+            var specificationResult = ApplySpecification(spec);
+            return await specificationResult.ToListAsync(cancellationToken);
         }
 
-        public IEnumerable<T> ListAll()
+        public async Task<int> CountAsync(ISpecification<T> spec, CancellationToken cancellationToken = default)
         {
-            return _dbContext.Set<T>().AsEnumerable();
+            var specificationResult = ApplySpecification(spec);
+            return await specificationResult.CountAsync(cancellationToken);
         }
 
-        public async Task<List<T>> ListAllAsync()
+        public async Task<T> AddAsync(T entity, CancellationToken cancellationToken = default)
         {
-            return await _dbContext.Set<T>().ToListAsync();
-        }
-
-        public IEnumerable<T> List(ISpecification<T> spec)
-        {
-            // fetch a Queryable that includes all expression-based includes
-            var queryableResultWithIncludes = spec.Includes
-                .Aggregate(_dbContext.Set<T>().AsQueryable(),
-                    (current, include) => current.Include(include));
-
-            // modify the IQueryable to include any string-based include statements
-            var secondaryResult = spec.IncludeStrings
-                .Aggregate(queryableResultWithIncludes,
-                    (current, include) => current.Include(include));
-
-            // return the result of the query using the specification's criteria expression
-            return secondaryResult
-                            .Where(spec.Criteria)
-                            .AsEnumerable();
-        }
-        public async Task<List<T>> ListAsync(ISpecification<T> spec)
-        {
-            // fetch a Queryable that includes all expression-based includes
-            var queryableResultWithIncludes = spec.Includes
-                .Aggregate(_dbContext.Set<T>().AsQueryable(),
-                    (current, include) => current.Include(include));
-
-            // modify the IQueryable to include any string-based include statements
-            var secondaryResult = spec.IncludeStrings
-                .Aggregate(queryableResultWithIncludes,
-                    (current, include) => current.Include(include));
-
-            // return the result of the query using the specification's criteria expression
-            return await secondaryResult
-                            .Where(spec.Criteria)
-                            .ToListAsync();
-        }
-
-        public T Add(T entity)
-        {
-            _dbContext.Set<T>().Add(entity);
-            _dbContext.SaveChanges();
+            await _dbContext.Set<T>().AddAsync(entity);
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
             return entity;
         }
 
-        public async Task<T> AddAsync(T entity)
-        {
-            _dbContext.Set<T>().Add(entity);
-            await _dbContext.SaveChangesAsync();
-
-            return entity;
-        }
-
-        public void Update(T entity)
+        public async Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
         {
             _dbContext.Entry(entity).State = EntityState.Modified;
-            _dbContext.SaveChanges();
-        }
-        public async Task UpdateAsync(T entity)
-        {
-            _dbContext.Entry(entity).State = EntityState.Modified;
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        public void Delete(T entity)
+        public async Task DeleteAsync(T entity, CancellationToken cancellationToken = default)
         {
             _dbContext.Set<T>().Remove(entity);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
-        public async Task DeleteAsync(T entity)
+
+        public async Task<T> FirstAsync(ISpecification<T> spec, CancellationToken cancellationToken = default)
         {
-            _dbContext.Set<T>().Remove(entity);
-            await _dbContext.SaveChangesAsync();
+            var specificationResult = ApplySpecification(spec);
+            return await specificationResult.FirstAsync(cancellationToken);
+        }
+
+        public async Task<T> FirstOrDefaultAsync(ISpecification<T> spec, CancellationToken cancellationToken = default)
+        {
+            var specificationResult = ApplySpecification(spec);
+            return await specificationResult.FirstOrDefaultAsync(cancellationToken);
+        }
+
+        private IQueryable<T> ApplySpecification(ISpecification<T> spec)
+        {
+            var evaluator = new SpecificationEvaluator<T>();
+            return evaluator.GetQuery(_dbContext.Set<T>().AsQueryable(), spec);
         }
     }
 }
