@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using BlazorShared.Interfaces;
 using BlazorShared.Models;
 
-namespace SpecFlowTests.Utils
+namespace SpecFlowTests.Setup
 {
+    //TODO not properly mocked yet
     public class AdminCommandsHandler
     {
         private readonly WebTestFixture _testFixture;
@@ -34,19 +35,19 @@ namespace SpecFlowTests.Utils
             });
         }
 
-        public async Task<List<BlazorShared.Models.CatalogItem>> GetAllCatalogItemsAdmin()
+        public async Task<List<BlazorShared.Models.CatalogItem>> GetAllCatalogItems()
         {
             var catalogItemService = _testFixture.ServiceProvider.GetService(typeof(ICatalogItemService)) as ICatalogItemService;
             return await catalogItemService.List();
         }
 
-        public async Task<CatalogBrand> GetCatalogBrandByNameAdmin(string name)
+        public async Task<CatalogBrand> GetCatalogBrandByName(string name)
         {
             var catalogItemService = _testFixture.ServiceProvider.GetService(typeof(ICatalogBrandService)) as ICatalogBrandService;
             return (await catalogItemService.List()).SingleOrDefault(b => b.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        public async Task<CatalogType> GetCatalogTypeByNameAdmin(string name)
+        public async Task<CatalogType> GetCatalogTypeByName(string name)
         {
             var catalogItemService = _testFixture.ServiceProvider.GetService(typeof(ICatalogTypeService)) as ICatalogTypeService;
             return (await catalogItemService.List()).SingleOrDefault(t => t.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using SpecFlowTests.CatalogItem.Rows;
+using SpecFlowTests.Setup;
 using SpecFlowTests.Utils;
 
 namespace SpecFlowTests.CatalogItem
@@ -18,14 +19,14 @@ namespace SpecFlowTests.CatalogItem
 
         public async Task WhenIAddTheFollowingItemToTheCatalog(AddItemToCatalogRow item)
         {
-            var brand = await _executor.GetCatalogBrandByNameAdmin(item.Brand);
-            var type = await _executor.GetCatalogTypeByNameAdmin(item.Type);
+            var brand = await _executor.GetCatalogBrandByName(item.Brand);
+            var type = await _executor.GetCatalogTypeByName(item.Type);
             await _executor.AddCatalogItem(item.Name, item.Price, item.Description, brand?.Id ?? 0, type?.Id ?? 0);
         }
 
         public async Task ThenTheCatalogContainsTheFollowingItems(IEnumerable<AssertItemInCatalogRow> expected)
         {
-            var allCatalogItems = await _executor.GetAllCatalogItemsAdmin();
+            var allCatalogItems = await _executor.GetAllCatalogItems();
 
             allCatalogItems.Select(i => new AssertItemInCatalogRow
             {
@@ -39,7 +40,7 @@ namespace SpecFlowTests.CatalogItem
 
         public async Task ThenTheCatalogDoesNotContainTheFollowingItems(IEnumerable<AssertItemInCatalogRow> notExpected)
         {
-            var allCatalogItems = await _executor.GetAllCatalogItemsAdmin();
+            var allCatalogItems = await _executor.GetAllCatalogItems();
 
             allCatalogItems.Select(i => new AssertItemInCatalogRow
             {

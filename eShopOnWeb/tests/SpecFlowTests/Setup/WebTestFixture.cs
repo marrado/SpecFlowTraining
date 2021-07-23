@@ -9,7 +9,7 @@ using Microsoft.eShopWeb.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace SpecFlowTests.Utils
+namespace SpecFlowTests.Setup
 {
     public class WebTestFixture : WebApplicationFactory<Startup>
     {

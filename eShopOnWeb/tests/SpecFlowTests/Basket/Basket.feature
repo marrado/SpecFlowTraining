@@ -26,6 +26,15 @@ Scenario: Item is added only to my basket
 
 	Then the basket of 'John Doe' is empty
 
+Scenario: Add an item to my basket
+
+	#I am logged in as 'Adam Smith' implicitely
+	Given my basket contains 'Prism White T-Shirt'
+	
+	When I add a 'Roslyn Red Sheet' to my basket
+
+	Then my basket contains 'Roslyn Red Sheet, Prism White T-Shirt'
+
 Scenario: Add an item to my basket (complex)
 
 	Given my basket contains following products:

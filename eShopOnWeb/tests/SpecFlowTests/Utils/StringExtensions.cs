@@ -1,4 +1,4 @@
-﻿namespace SpecFlowTests
+﻿namespace SpecFlowTests.Utils
 {
     public static class StringExtensions
     {

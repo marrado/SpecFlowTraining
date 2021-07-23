@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using SpecFlowTests.Basket.Rows;
+using SpecFlowTests.Setup;
 using SpecFlowTests.Utils;
 
 namespace SpecFlowTests.Basket

@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using SpecFlowTests.CatalogItem.Rows;
 using SpecFlowTests.Utils;
 using TechTalk.SpecFlow;
 
-namespace SpecFlowTests.Basket.Rows
+namespace SpecFlowTests.CatalogItem.Rows
 {
     [Binding]
     public class CatalogItemRowsStepArgumentTransformation
